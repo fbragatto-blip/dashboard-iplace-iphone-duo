@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iPlace · Execução iPhone Duo FY26Q4</title>
+<style>
+:root{
+  --bg:#f5f5f7; --card:#fff; --ink:#1d1d1f; --ink2:#6e6e73; --line:#d2d2d7;
+  --ok:#1d8348; --okbg:#e3f5ea; --pend:#9a5b00; --pendbg:#fff3e0;
+  --nr:#b3261e; --nrbg:#fdecea; --na:#6e6e73; --nabg:#f0f0f2;
+  --blue:#0071e3; --bluebg:#e5f1fb;
+  --apr:#5856d6; --aprbg:#ecebfb; --aar:#0a84c1; --aarbg:#e5f3fa;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 8px 24px rgba(0,0,0,.05);
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#000;--card:#1c1c1e;--ink:#f5f5f7;--ink2:#98989d;--line:#38383a;
+  --okbg:#0e2f1c;--ok:#4ade80;--pendbg:#3a2a05;--pend:#fbbf24;--nrbg:#3a1210;--nr:#f87171;
+  --nabg:#2c2c2e;--na:#98989d;--blue:#388bfd;--bluebg:#0d2d5e;
+  --aprbg:#26244d;--apr:#a5a3f5;--aarbg:#0b2c3d;--aar:#6cc4e8;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:14px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1580px;margin:0 auto;padding:24px 20px 64px}
+
+header.top{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:22px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.4px;margin:0 0 4px}
+.sub{color:var(--ink2);font-size:13px}
+.stamp{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;box-shadow:var(--shadow);font-size:12px;line-height:1.6}
+.stamp b{font-size:13px}
+.stamp .lbl{color:var(--ink2);text-transform:uppercase;letter-spacing:.5px;font-size:10px;font-weight:600}
+
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
+.tab{appearance:none;border:0;background:none;font:inherit;font-weight:600;color:var(--ink2);
+  padding:10px 18px;border-radius:10px 10px 0 0;cursor:pointer;position:relative;top:1px;white-space:nowrap}
+.tab[aria-selected=true]{color:var(--ink);background:var(--card);border:1px solid var(--line);border-bottom-color:var(--card)}
+.tab .pill{display:inline-block;margin-left:8px;background:var(--nabg);color:var(--na);border-radius:20px;padding:1px 8px;font-size:11px;font-weight:700}
+
+section.panel{display:none}
+section.panel.on{display:block}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.kpi .n{font-size:30px;font-weight:700;letter-spacing:-1px;line-height:1.1}
+.kpi .t{font-size:12px;color:var(--ink2);margin-top:3px}
+.kpi .t2{font-size:11px;color:var(--ink2);opacity:.8}
+.kpi.ok .n{color:var(--ok)} .kpi.pend .n{color:var(--pend)} .kpi.nr .n{color:var(--nr)} .kpi.blue .n{color:var(--blue)}
+
+.grid-2col{display:grid;grid-template-columns:1.15fr 0.85fr;gap:16px;margin-bottom:16px;align-items:start}
+.grid-2col .card{margin-bottom:0}
+@media(max-width:1200px){.grid-2col{grid-template-columns:1fr}}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.card>h2{margin:0;padding:13px 16px;font-size:14px;font-weight:700;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card>h2 small{font-weight:400;color:var(--ink2);font-size:11.5px}
+.card .body{padding:14px 16px}
+
+table.el, table.lojas{width:100%;border-collapse:collapse;font-size:13px}
+table.el th,table.el td, table.lojas th, table.lojas td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line)}
+table.el th, table.lojas th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--ink2);font-weight:700}
+table.el tr:last-child td, table.lojas tr:last-child td{border-bottom:0}
+table.el td.n, table.lojas td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;width:64px}
+table.el td.c, table.lojas td.c{text-align:center}
+table.el th.c, table.lojas th.c{text-align:center}
+
+.bar{height:8px;border-radius:6px;background:var(--nabg);overflow:hidden;display:flex;min-width:130px}
+.bar i{display:block;height:100%}
+.bar .b-ok{background:var(--ok)} .bar .b-pend{background:#e8912d} .bar .b-nr{background:#d9584f}
+
+.fprimary{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.fsecondary{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.f{display:flex;flex-direction:column;gap:5px}
+.f label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink2)}
+.fprimary .f label{color:var(--ink)}
+select,input[type=search]{font:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);
+  border-radius:9px;background:var(--card);color:var(--ink);width:100%}
+.fprimary select{padding:9px 11px;font-size:13.5px;font-weight:600;border-width:1.5px;
+  border-color:color-mix(in srgb,var(--blue) 35%,var(--line));
+  background:color-mix(in srgb,var(--blue) 4%,var(--card))}
+select:focus,input:focus{outline:2px solid var(--blue);outline-offset:-1px;border-color:var(--blue)}
+.fdiv{display:flex;align-items:center;gap:10px;margin:18px 0 12px}
+.fdiv span{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink2)}
+.fdiv:after{content:"";height:1px;background:var(--line);flex:1}
+.frow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.btn{font:inherit;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:9px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.count{font-size:12.5px;color:var(--ink2);margin-left:auto}
+.count b{color:var(--ink)}
+
+.tblwrap{overflow-x:auto}
+
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.badge.ok{background:var(--okbg);color:var(--ok)}
+.badge.pend{background:var(--pendbg);color:var(--pend)}
+.badge.nr{background:var(--nrbg);color:var(--nr)}
+.badge.na{background:var(--nabg);color:var(--na)}
+.badge.apr{background:var(--aprbg);color:var(--apr)}
+.badge.aar{background:var(--aarbg);color:var(--aar)}
+.badge.blue{background:var(--bluebg);color:var(--blue)}
+
+.empty{padding:48px 20px;text-align:center;color:var(--ink2)}
+.empty .big{font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.fx{padding:10px 16px;background:color-mix(in srgb,var(--card) 95%,var(--ink2) 5%);font-size:11.5px;color:var(--ink2);border-top:1px solid var(--line)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <h1>iPlace · Execução iPhone Duo FY26Q4</h1>
+    <div class="sub" id="hdrSub">Acompanhamento Operacional · Lojas iPlace (APR & Tier 2 MonoBrand)</div>
+  </div>
+  <div class="stamp">
+    <div><span class="lbl">Última atualização</span><br><b id="stBuild">--</b></div>
+  </div>
+</header>
+
+<div class="tabs" role="tablist">
+  <button class="tab" role="tab" aria-selected="true"  data-k="all">Todas as Lojas<span class="pill" id="p-all">0</span></button>
+  <button class="tab" role="tab" aria-selected="false" data-k="apr">Apple Premium Reseller (APR)<span class="pill" id="p-apr">0</span></button>
+  <button class="tab" role="tab" aria-selected="false" data-k="t2">Tier 2 MonoBrand<span class="pill" id="p-t2">0</span></button>
+  <button class="tab" role="tab" aria-selected="false" data-k="dcota">DCOTA Online<span class="pill" id="p-dc">0</span></button>
+</div>
+
+<section class="panel on" id="panel-all"></section>
+<section class="panel"    id="panel-apr"></section>
+<section class="panel"    id="panel-t2"></section>
+<section class="panel"    id="panel-dcota"></section>
+
+</div>
+
+<script>
+const DATA = {"meta":{"npi":"iPlace · iPhone Duo | FY26Q4","buildDt":"21/10/2026 21:24","total_stores":80,"elements":[{"key":"duo","label":"iPhone Duo Demo"},{"key":"mat3d","label":"3D Materiais"}]},"stores":[{"id":"560581","name":"IPLACE BOURBON SHOPPING","prog":"APR","program":"Apple Premium Reseller","city":"SAO PAULO","state":"SÃO PAULO","regional":"CÁTIA VILELA","rm":"Glauco Tamega","ace":"VIVIANE CRISLEY","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"649825","name":"IPLACE JK IGUATEMI","prog":"APR","program":"Apple Premium Reseller","city":"SAO PAULO","state":"SÃO PAULO","regional":"CÁTIA VILELA","rm":"Glauco Tamega","ace":"GABRIEL PAQUEROTI","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"604809","name":"IPLACE MOOCA PLAZA SHOPPING","prog":"APR","program":"Apple Premium Reseller","city":"SAO PAULO","state":"SÃO PAULO","regional":"CÁTIA VILELA","rm":"Glauco Tamega","ace":"VIVIANE CRISLEY","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"853412","name":"IPLACE PLAZA SUL SAO PAULO","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SAO PAULO","state":"","regional":"CÁTIA VILELA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"991533","name":"IPLACE SHOPPING ANALIA FRANCO","prog":"APR","program":"Apple Premium Reseller","city":"SAO PAULO","state":"SÃO PAULO","regional":"CÁTIA VILELA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1066486","name":"IPLACE SHOPPING ARICANDUVA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SAO PAULO","state":"","regional":"CÁTIA VILELA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"700435","name":"IPLACE SHOPPING CENTER NORTE","prog":"APR","program":"Apple Premium Reseller","city":"SAO PAULO","state":"SÃO PAULO","regional":"CÁTIA VILELA","rm":"Glauco Tamega","ace":"VIVIANE CRISLEY","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1544016","name":"IPLACE SHOPPING CIDADE SAO PAULO","prog":"APR","program":"Apple Premium Reseller","city":"SAO PAULO","state":"SÃO PAULO","regional":"CÁTIA VILELA","rm":"Glauco Tamega","ace":"GABRIEL PAQUEROTI","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"991543","name":"IPLACE SHOPPING EL DORADO","prog":"APR","program":"Apple Premium Reseller","city":"SAO PAULO","state":"SÃO PAULO","regional":"CÁTIA VILELA","rm":"Glauco Tamega","ace":"VIVIANE CRISLEY","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"991549","name":"IPLACE SHOPPING IBIRAPUERA","prog":"APR","program":"Apple Premium Reseller","city":"SAO PAULO","state":"SÃO PAULO","regional":"CÁTIA VILELA","rm":"Glauco Tamega","ace":"GABRIEL PAQUEROTI","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1019308","name":"IPLACE SHOPPING METRO TATUAPE","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SAO PAULO","state":"","regional":"CÁTIA VILELA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"891118","name":"IPLACE SHOPPING TAMBORE","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"BARUERI","state":"","regional":"CÁTIA VILELA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"854894","name":"IPLACE TIETE PLAZA SHOPPING","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SAO PAULO","state":"","regional":"CÁTIA VILELA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"991551","name":"IPLACE VILLA LOBOS","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SAO PAULO","state":"","regional":"CÁTIA VILELA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"964969","name":"IPLACE BALNEARIO SHOPPING CAMBORIU","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"BALNEARIO CAMBORIU","state":"","regional":"DANIEL ALBACH","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"481804","name":"IPLACE BARRA SHOPPING SUL","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"PORTO ALEGRE","state":"RIO GRANDE DO SUL","regional":"DANIEL ALBACH","rm":"Tania Gadelha","ace":"ALESSANDRA SZORTYKA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"423034","name":"IPLACE IGUATEMI PORTO ALEGRE","prog":"APR","program":"Apple Premium Reseller","city":"PORTO ALEGRE","state":"RIO GRANDE DO SUL","regional":"DANIEL ALBACH","rm":"Tania Gadelha","ace":"ALESSANDRA SZORTYKA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"2115637","name":"IPLACE MOBILE JOCKEY PLAZA PR","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"CURITIBA","state":"","regional":"DANIEL ALBACH","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1811175","name":"IPLACE MOBILE PASSO FUNDO SHOPP","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"PASSO FUNDO","state":"","regional":"DANIEL ALBACH","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1691014","name":"IPLACE MOBILE PRACA NOVA SANTA MARIA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SANTA MARIA","state":"","regional":"DANIEL ALBACH","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1057125","name":"IPLACE PALLADIUM CURITIBA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"CURITIBA","state":"","regional":"DANIEL ALBACH","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1706573","name":"IPLACE PARK SHOPPING CANOAS RS","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"CANOAS","state":"RIO GRANDE DO SUL","regional":"DANIEL ALBACH","rm":"Tania Gadelha","ace":"ALESSANDRA SZORTYKA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1055206","name":"IPLACE PATIO BATEL CURITIBA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"CURITIBA","state":"PARANÁ","regional":"DANIEL ALBACH","rm":"Tania Gadelha","ace":"WAGNER VENCENTE","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"870671","name":"IPLACE PRAIA DE BELAS PORTO ALEGRE","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"PORTO ALEGRE","state":"","regional":"DANIEL ALBACH","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1062494","name":"IPLACE PREMIUM NOVO HAMBURGO","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"NOVO HAMBURGO","state":"","regional":"DANIEL ALBACH","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1710620","name":"IPLACE SHOPPING MUELLER SC","prog":"APR","program":"Apple Premium Reseller","city":"JOINVILLE","state":"SANTA CATARINA","regional":"DANIEL ALBACH","rm":"Tania Gadelha","ace":"WAGNER VENCENTE","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1050130","name":"IPLACE SHOPPING PELOTAS","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"PELOTAS","state":"","regional":"DANIEL ALBACH","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1811265","name":"IPLACE MOBILE PATIO OLINDA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"OLINDA","state":"","regional":"JERRISON FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1141493","name":"IPLACE PARQUE SHOPPING MACEIO","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"MACEIO","state":"","regional":"JERRISON FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1020808","name":"IPLACE PLAZA CASA FORTE RECIFE","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"RECIFE","state":"","regional":"JERRISON FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"2379277","name":"IPLACE RIOMAR RECIFE","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"RECIFE","state":"PERNAMBUCO","regional":"JERRISON FARIAS","rm":"Tania Gadelha","ace":"RAFAEL TIRP","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"814014","name":"IPLACE RIOPRETO SHOPPING CENTER","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SAO JOSE DO RIO PRETO","state":"","regional":"JERRISON FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"2401400","name":"IPLACE SALVADOR SHOPPING","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SALVADOR","state":"BAHIA","regional":"JERRISON FARIAS","rm":"Tania Gadelha","ace":"RICARDO TOSTA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1559317","name":"IPLACE SHOPPING BARRA SALVADOR","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SALVADOR","state":"BAHIA","regional":"JERRISON FARIAS","rm":"Tania Gadelha","ace":"RICARDO TOSTA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"2379427","name":"IPLACE SHOPPING DA BAHIA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SALVADOR","state":"BAHIA","regional":"JERRISON FARIAS","rm":"Tania Gadelha","ace":"RICARDO TOSTA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1020792","name":"IPLACE SHOPPING GUARARAPES","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"JABOATAO DOS GUARARAPES","state":"","regional":"JERRISON FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"727819","name":"IPLACE SHOPPING IGUATEMI FORTALEZA","prog":"T2 MonoBrand","program":"Apple Premium Reseller","city":"FORTALEZA","state":"CEARÁ","regional":"JERRISON FARIAS","rm":"Tania Gadelha","ace":"RICARDO TOSTA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"712864","name":"IPLACE SHOPPING MANAIRA","prog":"APR","program":"Apple Premium Reseller","city":"JOAO PESSOA","state":"PARAÍBA","regional":"JERRISON FARIAS","rm":"Tania Gadelha","ace":"RAFAEL TIRP","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"735334","name":"IPLACE SHOPPING MIDWAY MALL NATAL","prog":"APR","program":"Apple Premium Reseller","city":"NATAL","state":"RIO GRANDE DO NORTE","regional":"JERRISON FARIAS","rm":"Tania Gadelha","ace":"RAFAEL TIRP","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"2386980","name":"IPLACE SHOPPING RECIFE","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"RECIFE","state":"PERNAMBUCO","regional":"JERRISON FARIAS","rm":"Tania Gadelha","ace":"RAFAEL TIRP","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1110390","name":"IPLACE SHOPPING RIO MAR FORTALEZA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"FORTALEZA","state":"CEARÁ","regional":"JERRISON FARIAS","rm":"Tania Gadelha","ace":"RICARDO TOSTA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1738079","name":"IPLACE SHOPPING RIO MAR SE","prog":"APR","program":"Apple Premium Reseller","city":"ARACAJU","state":"SERGIPE","regional":"JERRISON FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1024680","name":"IPLACE SHOPPING TACARUNA RECIFE","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"RECIFE","state":"","regional":"JERRISON FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1710625","name":"IPLACE TIVOLI SHOPPING","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SANTA BARBARA DOESTE","state":"","regional":"JERRISON FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"479954","name":"IPLACE BH SHOPPING","prog":"APR","program":"Apple Premium Reseller","city":"BELO HORIZONTE","state":"MINAS GERAIS","regional":"JULIANA PEDROSA","rm":"Glauco Tamega","ace":"DAYRELL JR","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"849429","name":"IPLACE CENTER VALE SHOPPING","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SAO JOSE DOS CAMPOS","state":"","regional":"JULIANA PEDROSA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"991538","name":"IPLACE IGUATEMI CAMPINAS","prog":"APR","program":"Apple Premium Reseller","city":"CAMPINAS","state":"SÃO PAULO","regional":"JULIANA PEDROSA","rm":"Glauco Tamega","ace":"GABRIEL PAQUEROTI","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1066481","name":"IPLACE INTERNACIONAL GUARULHOS","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"GUARULHOS","state":"","regional":"JULIANA PEDROSA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1960775","name":"IPLACE MOBILE SHOPPIN PARQUE MAIA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"GUARULHOS","state":"","regional":"JULIANA PEDROSA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1124479","name":"IPLACE MOGI SHOPPING","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"MOGI DAS CRUZES","state":"","regional":"JULIANA PEDROSA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"870251","name":"IPLACE PARQUE DOM PEDRO SHOPPING CAMPINAS","prog":"APR","program":"Apple Premium Reseller","city":"CAMPINAS","state":"SÃO PAULO","regional":"JULIANA PEDROSA","rm":"Glauco Tamega","ace":"GABRIEL PAQUEROTI","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1034945","name":"IPLACE PATIO SAVASSI BH","prog":"APR","program":"Apple Premium Reseller","city":"BELO HORIZONTE","state":"MINAS GERAIS","regional":"JULIANA PEDROSA","rm":"Glauco Tamega","ace":"DAYRELL JR","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1060245","name":"IPLACE SHOPPING CONTAGEM","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"CONTAGEM","state":"","regional":"JULIANA PEDROSA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"991552","name":"IPLACE IGUATEMI ALPHAVILLE","prog":"APR","program":"Apple Premium Reseller","city":"BARUERI","state":"SÃO PAULO","regional":"JÉSSICA FARIAS","rm":"Glauco Tamega","ace":"GABRIEL PAQUEROTI","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"580751","name":"IPLACE PARK SHOPPING SAO CAETANO","prog":"APR","program":"Apple Premium Reseller","city":"SAO CAETANO DO SUL","state":"SÃO PAULO","regional":"JÉSSICA FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1152901","name":"IPLACE PRAIAMAR SHOPPING SANTOS","prog":"APR","program":"Apple Premium Reseller","city":"SANTOS","state":"SÃO PAULO","regional":"JÉSSICA FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"854879","name":"IPLACE RIBEIRAO SHOPPING","prog":"APR","program":"Apple Premium Reseller","city":"RIBEIRAO PRETO","state":"SÃO PAULO","regional":"JÉSSICA FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"867487","name":"IPLACE SHOPPING ABC SANTO ANDRE","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SANTO ANDRE","state":"","regional":"JÉSSICA FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"849473","name":"IPLACE SHOPPING IGUATEMI ESPLANADA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"VOTORANTIM","state":"","regional":"JÉSSICA FARIAS","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1050123","name":"IPLACE SHOPPING INTERLAGOS","prog":"APR","program":"Apple Premium Reseller","city":"SAO PAULO","state":"SÃO PAULO","regional":"JÉSSICA FARIAS","rm":"Glauco Tamega","ace":"VIVIANE CRISLEY","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1718416","name":"IPLACE SHOPPING UNIAO DE OSASCO","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"OSASCO","state":"SÃO PAULO","regional":"JÉSSICA FARIAS","rm":"Glauco Tamega","ace":"VIVIANE CRISLEY","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"2382660","name":"IPLACE BARRA SHOPPING RIO","prog":"APR","program":"Apple Premium Reseller","city":"RIO DE JANEIRO","state":"RIO DE JANEIRO","regional":"JÉSSICA FARIAS (INTERINA)","rm":"Tania Gadelha","ace":"BRUNO CASSANO","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1679272","name":"IPLACE MOBILE CARIOCA SHOPPING","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"RIO DE JANEIRO","state":"","regional":"JÉSSICA FARIAS (INTERINA)","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1031109","name":"IPLACE NORTE SHOPPING RIO DE JANEIRO","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"RIO DE JANEIRO","state":"","regional":"JÉSSICA FARIAS (INTERINA)","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"806201","name":"IPLACE PLAZA SHOPPING NITEROI","prog":"APR","program":"Apple Premium Reseller","city":"NITEROI","state":"RIO DE JANEIRO","regional":"JÉSSICA FARIAS (INTERINA)","rm":"Tania Gadelha","ace":"BRUNO CASSANO","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"881687","name":"IPLACE RIOSUL SHOPPING","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"RIO DE JANEIRO","state":"RIO DE JANEIRO","regional":"JÉSSICA FARIAS (INTERINA)","rm":"Tania Gadelha","ace":"BRUNO CASSANO","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1032692","name":"IPLACE SHOPPING GRANDE RIO","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SAO JOAO DE MERITI","state":"","regional":"JÉSSICA FARIAS (INTERINA)","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1685237","name":"IPLACE SHOPPING LEBLON","prog":"T2 MonoBrand","program":"Apple Premium Reseller","city":"RIO DE JANEIRO","state":"RIO DE JANEIRO","regional":"JÉSSICA FARIAS (INTERINA)","rm":"Tania Gadelha","ace":"BRUNO CASSANO","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1544019","name":"IPLACE SHOPPING NOVA AMERICA RIO","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"RIO DE JANEIRO","state":"RIO DE JANEIRO","regional":"JÉSSICA FARIAS (INTERINA)","rm":"Tania Gadelha","ace":"BRUNO CASSANO","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1009983","name":"IPLACE SHOPPING TIJUCA RIO DE JANEIRO","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"RIO DE JANEIRO","state":"RIO DE JANEIRO","regional":"JÉSSICA FARIAS (INTERINA)","rm":"Tania Gadelha","ace":"BRUNO CASSANO","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"2380810","name":"IPLACE SHOPPING VITORIA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"VITORIA","state":"ESPÍRITO SANTO","regional":"JÉSSICA FARIAS (INTERINA)","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1007564","name":"IPLACE WEST SHOPPING RIO DE JANEIRO","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"RIO DE JANEIRO","state":"","regional":"JÉSSICA FARIAS (INTERINA)","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"4255821","name":"IPLACE ESTACAO CUIABA","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"CUIABA","state":"","regional":"LUÍS HENRIQUE GARCIA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"2392712","name":"IPLACE FLAMBOYANT SHOPPING","prog":"APR","program":"Apple Premium Reseller","city":"GOIANIA","state":"GOIÁS","regional":"LUÍS HENRIQUE GARCIA","rm":"Glauco Tamega","ace":"POLY AZARA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1665959","name":"IPLACE PANTANAL SHOPPING","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"CUIABA","state":"MATO GROSSO","regional":"LUÍS HENRIQUE GARCIA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"462902","name":"IPLACE PARK SHOPPING BRASILIA","prog":"APR","program":"Apple Premium Reseller","city":"BRASILIA","state":"BRASÍLIA","regional":"LUÍS HENRIQUE GARCIA","rm":"Glauco Tamega","ace":"POLY AZARA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1671869","name":"IPLACE PARQUE SHOPPING BELEM","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"BELEM","state":"PARÁ","regional":"LUÍS HENRIQUE GARCIA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"596155","name":"IPLACE SHOPPING CAMPO GRANDE","prog":"APR","program":"Apple Premium Reseller","city":"CAMPO GRANDE","state":"MATO GROSSO DO SUL","regional":"LUÍS HENRIQUE GARCIA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"964968","name":"IPLACE SHOPPING DA ILHA SAO LUIS","prog":"T2 MonoBrand","program":"Tier 2 MonoBrand","city":"SAO LUIS","state":"","regional":"LUÍS HENRIQUE GARCIA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3313","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""},{"id":"1760321","name":"IPLACE SHOPPING METROPOLE","prog":"APR","program":"Apple Premium Reseller","city":"ANANINDEUA","state":"PARÁ","regional":"LUÍS HENRIQUE GARCIA","rm":"SEM COBERTURA","ace":"SEM COBERTURA","ba":"SEM COBERTURA","staffing":"POS STAFF","timeline":"SEM DEFINIÇÃO","wave_id":"3310","ps":0,"el":{"duo":"NR","mat3d":"NR"},"pend":"","dcota_online":false,"dcota_count":0,"dcota_devs":[],"comment":"","bridging":""}],"dcota":[]};
+const STORES = DATA.stores;
+
+document.getElementById('stBuild').textContent = DATA.meta.buildDt;
+document.getElementById('p-all').textContent = STORES.length;
+document.getElementById('p-apr').textContent = STORES.filter(s => s.prog === 'APR').length;
+document.getElementById('p-t2').textContent = STORES.filter(s => s.prog !== 'APR').length;
+document.getElementById('p-dc').textContent = STORES.length;
+
+// Tab switcher
+document.querySelectorAll('.tabs .tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tabs .tab').forEach(b => b.setAttribute('aria-selected', 'false'));
+    document.querySelectorAll('section.panel').forEach(p => p.classList.remove('on'));
+    btn.setAttribute('aria-selected', 'true');
+    const k = btn.dataset.k;
+    const p = document.getElementById('panel-' + k);
+    if(p) p.classList.add('on');
+  });
+});
+
+const PS_MAP = {
+  0: { label: '0 · Não reportou', cls: 'nr', short: 'Sem report' },
+  1: { label: '1 · Reportou c/ pendência', cls: 'pend', short: 'Pendente' },
+  2: { label: '2 · OK 100%', cls: 'ok', short: 'OK 100%' }
+};
+
+const EL_MAP = {
+  OK: { cls: 'ok', txt: 'OK' },
+  PEND: { cls: 'pend', txt: 'PENDENTE' },
+  NR: { cls: 'nr', txt: '—' },
+  NA: { cls: 'na', txt: 'N/A' }
+};
+
+function pct(n, tot) {
+  if (!tot) return '0%';
+  return Math.round((n / tot) * 100) + '%';
+}
+
+function renderKPIs(stores, filterTot) {
+  const tot = stores.length;
+  const ok = stores.filter(s => s.ps === 2).length;
+  const pend = stores.filter(s => s.ps === 1).length;
+  const nr = stores.filter(s => s.ps === 0).length;
+  const rep = ok + pend;
+  const dcOn = stores.filter(s => s.dcota_online).length;
+
+  return `
+  <div class="kpi">
+    <div class="n">${tot}</div>
+    <div class="t">Lojas no filtro</div>
+    <div class="t2">de ${filterTot} lojas iPlace</div>
+  </div>
+  <div class="kpi ok">
+    <div class="n">${ok}</div>
+    <div class="t">POS 2 · OK 100%</div>
+    <div class="t2">${pct(ok, tot)} do filtro</div>
+  </div>
+  <div class="kpi pend">
+    <div class="n">${pend}</div>
+    <div class="t">POS 1 · C/ pendência</div>
+    <div class="t2">${pct(pend, tot)} do filtro</div>
+  </div>
+  <div class="kpi nr">
+    <div class="n">${nr}</div>
+    <div class="t">POS 0 · Não reportou</div>
+    <div class="t2">${pct(nr, tot)} do filtro</div>
+  </div>
+  <div class="kpi blue">
+    <div class="n">${pct(rep, tot)}</div>
+    <div class="t">Taxa de report</div>
+    <div class="t2">${rep} de ${tot} lojas</div>
+  </div>
+  <div class="kpi ${dcOn > 0 ? 'ok' : ''}">
+    <div class="n">${dcOn}</div>
+    <div class="t">DCOTA Online</div>
+    <div class="t2">${pct(dcOn, tot)} dos aparelhos</div>
+  </div>
+  `;
+}
+
+function renderElementsTable(stores) {
+  const tot = stores.length;
+  const repStores = stores.filter(s => s.ps > 0);
+  const repTot = repStores.length;
+
+  const elements = [
+    { key: 'duo', label: 'iPhone Duo Demo' },
+    { key: 'mat3d', label: '3D Materiais' }
+  ];
+
+  let rowsHtml = '';
+  for (const el of elements) {
+    const ok = repStores.filter(s => s.el[el.key] === 'OK').length;
+    const p = repStores.filter(s => s.el[el.key] === 'PEND').length;
+    const nr = tot - (ok + p);
+    const pOk = pct(ok, repTot || 1);
+
+    const wOk = pct(ok, tot);
+    const wP = pct(p, tot);
+    const wNr = pct(nr, tot);
+
+    rowsHtml += `
+    <tr>
+      <td><b>${el.label}</b></td>
+      <td class="n">${tot}</td>
+      <td style="min-width:140px">
+        <div class="bar">
+          <i class="b-ok" style="width:${wOk}"></i>
+          <i class="b-pend" style="width:${wP}"></i>
+          <i class="b-nr" style="width:${wNr}"></i>
+        </div>
+      </td>
+      <td class="n" style="color:var(--ok)">${ok}</td>
+      <td class="n" style="color:var(--pend)">${p}</td>
+      <td class="n" style="color:var(--nr)">${nr}</td>
+      <td class="n"><b>${pOk}</b></td>
+    </tr>
+    `;
+  }
+
+  return `
+  <div class="card">
+    <h2>Visão por elemento <small>Consolidado · base = lojas que reportaram</small></h2>
+    <div class="tblwrap">
+      <table class="el">
+        <thead>
+          <tr>
+            <th>Elemento</th>
+            <th class="n">Lojas</th>
+            <th>Progresso</th>
+            <th class="n">OK</th>
+            <th class="n">Pend.</th>
+            <th class="n">S/ resp.</th>
+            <th class="n">% OK</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>
+  </div>
+  `;
+}
+
+function renderRegionalSummary(stores) {
+  const groups = {};
+  for (const s of stores) {
+    const k = s.regional || 'SEM REGIONAL';
+    if (!groups[k]) groups[k] = { tot: 0, rep: 0, ok: 0, pend: 0, nr: 0 };
+    groups[k].tot++;
+    if (s.ps > 0) groups[k].rep++;
+    if (s.ps === 2) groups[k].ok++;
+    if (s.ps === 1) groups[k].pend++;
+    if (s.ps === 0) groups[k].nr++;
+  }
+
+  const keys = Object.keys(groups).sort((a,b) => groups[b].tot - groups[a].tot);
+
+  let rowsHtml = '';
+  for (const k of keys) {
+    const g = groups[k];
+    const wOk = pct(g.ok, g.tot);
+    const wP = pct(g.pend, g.tot);
+    const wNr = pct(g.nr, g.tot);
+
+    rowsHtml += `
+    <tr>
+      <td><b>${k}</b></td>
+      <td class="c">${g.tot}</td>
+      <td class="c" style="color:var(--ok);font-weight:700">${g.ok}</td>
+      <td style="min-width:110px">
+        <div class="bar">
+          <i class="b-ok" style="width:${wOk}"></i>
+          <i class="b-pend" style="width:${wP}"></i>
+          <i class="b-nr" style="width:${wNr}"></i>
+        </div>
+      </td>
+      <td class="c" style="color:var(--pend);font-weight:700">${g.pend > 0 ? g.pend : '—'}</td>
+      <td class="c" style="color:var(--nr);font-weight:700">${g.nr > 0 ? g.nr : '—'}</td>
+    </tr>
+    `;
+  }
+
+  return `
+  <div class="card">
+    <h2>Visão por Regional iPlace <small>Distribuição e execução · respeita os filtros</small></h2>
+    <div class="tblwrap">
+      <table class="el">
+        <thead>
+          <tr>
+            <th>Regional</th>
+            <th class="c">Lojas</th>
+            <th class="c">100% OK</th>
+            <th>Progresso</th>
+            <th class="c">Pendente</th>
+            <th class="c">Sem Report</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>
+  </div>
+  `;
+}
+
+function renderStoresTable(stores, tableId) {
+  let rowsHtml = '';
+  for (const s of stores) {
+    const psObj = PS_MAP[s.ps] || PS_MAP[0];
+    const duoObj = EL_MAP[s.el.duo] || EL_MAP.NR;
+    const matObj = EL_MAP[s.el.mat3d] || EL_MAP.NR;
+    const progCls = (s.prog === 'APR') ? 'apr' : 'aar';
+
+    const dcBadge = s.dcota_online
+      ? `<span class="badge ok">🟢 Online</span>`
+      : `<span class="badge na">⚪ Offline</span>`;
+
+    rowsHtml += `
+    <tr>
+      <td><code>${s.id}</code></td>
+      <td>
+        <b>${s.name}</b><br>
+        <span style="color:var(--ink2);font-size:11.5px">${s.city}${s.state ? ' / ' + s.state : ''}</span>
+      </td>
+      <td><span class="badge ${progCls}">${s.prog}</span></td>
+      <td>
+        <b>${s.regional}</b><br>
+        <small style="color:var(--ink2)">TL: ${s.timeline}</small>
+      </td>
+      <td class="c"><span class="badge ${psObj.cls}">${psObj.label}</span></td>
+      <td class="c"><span class="badge ${duoObj.cls}">${duoObj.txt}</span></td>
+      <td class="c"><span class="badge ${matObj.cls}">${matObj.txt}</span></td>
+      <td class="c">${dcBadge}</td>
+      <td style="font-size:12px;color:var(--ink2);max-width:220px">
+        ${s.pend ? `<b style="color:var(--pend)">${s.pend}</b><br>` : ''}
+        ${s.comment ? `<em>${s.comment}</em>` : '—'}
+      </td>
+    </tr>
+    `;
+  }
+
+  return `
+  <div class="card">
+    <h2>Lojas iPlace Detalhadas <small id="cnt-${tableId}">Mostrando ${stores.length} lojas</small></h2>
+    <div class="tblwrap">
+      <table class="lojas" id="${tableId}">
+        <thead>
+          <tr>
+            <th>Apple ID</th>
+            <th>Loja / Cidade</th>
+            <th>Programa</th>
+            <th>Regional / TL</th>
+            <th class="c">POS Status</th>
+            <th class="c">iPhone Duo Demo</th>
+            <th class="c">3D Materiais</th>
+            <th class="c">DCOTA</th>
+            <th>Pendência / Obs</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml || '<tr><td colspan="9" class="empty">Nenhuma loja encontrada para os filtros selecionados</td></tr>'}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  `;
+}
+
+function mountPanel(panelId, initialStores, filterKey) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+
+  const regionals = [...new Set(initialStores.map(s => s.regional))].filter(x => x && x !== 'SEM REGIONAL').sort();
+  const timelines = [...new Set(initialStores.map(s => s.timeline))].filter(x => x && x !== 'SEM DEFINIÇÃO').sort();
+
+  panel.innerHTML = `
+  <div class="kpis" id="kpis-${filterKey}">
+    ${renderKPIs(initialStores, STORES.length)}
+  </div>
+
+  <div class="grid-2col">
+    ${renderRegionalSummary(initialStores)}
+    ${renderElementsTable(initialStores)}
+  </div>
+
+  <div class="card">
+    <h2>Filtros <small>Refine por regional, programa ou status</small></h2>
+    <div class="body">
+      <div class="fprimary">
+        <div class="f">
+          <label>Programa</label>
+          <select id="f-prog-${filterKey}">
+            <option value="">Todos os Programas</option>
+            <option value="APR">Apple Premium Reseller (APR)</option>
+            <option value="T2 MonoBrand">Tier 2 MonoBrand</option>
+          </select>
+        </div>
+        <div class="f">
+          <label>Regional</label>
+          <select id="f-rm-${filterKey}">
+            <option value="">Todas (${regionals.length})</option>
+            ${regionals.map(r => `<option value="${r}">${r}</option>`).join('')}
+          </select>
+        </div>
+        <div class="f">
+          <label>POS Status</label>
+          <select id="f-ps-${filterKey}">
+            <option value="">Todos os Status</option>
+            <option value="pend_all">⚠️ Todas as Pendências (0 + 1)</option>
+            <option value="1">1 · Reportou c/ pendência</option>
+            <option value="0">0 · Não reportou</option>
+            <option value="2">2 · OK 100%</option>
+          </select>
+        </div>
+        <div class="f">
+          <label>DCOTA Online</label>
+          <select id="f-dc-${filterKey}">
+            <option value="">Todos</option>
+            <option value="online">🟢 Online</option>
+            <option value="offline">⚪ Offline</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fdiv"><span>Filtros Adicionais</span></div>
+
+      <div class="fsecondary">
+        <div class="f">
+          <label>Data de Execução (Timeline)</label>
+          <select id="f-tl-${filterKey}">
+            <option value="">Todas (${timelines.length})</option>
+            ${timelines.map(t => `<option value="${t}">${t}</option>`).join('')}
+          </select>
+        </div>
+        <div class="f">
+          <label>Buscar Loja, Cidade ou ID</label>
+          <input type="search" id="f-search-${filterKey}" placeholder="Ex: Barra, Morumbi, 560581...">
+        </div>
+      </div>
+
+      <div class="frow">
+        <button class="btn" id="f-clear-${filterKey}">Limpar Filtros</button>
+        <span class="count" id="f-count-${filterKey}"></span>
+      </div>
+    </div>
+  </div>
+
+  <div id="table-wrap-${filterKey}">
+    ${renderStoresTable(initialStores, 'tbl-' + filterKey)}
+  </div>
+  `;
+
+  function applyFilters() {
+    let filtered = initialStores;
+
+    const progVal = document.getElementById(`f-prog-${filterKey}`).value;
+    if (progVal) filtered = filtered.filter(s => s.prog === progVal);
+
+    const rmVal = document.getElementById(`f-rm-${filterKey}`).value;
+    if (rmVal) filtered = filtered.filter(s => s.regional === rmVal);
+
+    const psVal = document.getElementById(`f-ps-${filterKey}`).value;
+    if (psVal === 'pend_all') {
+      filtered = filtered.filter(s => s.ps === 0 || s.ps === 1);
+    } else if (psVal !== '') {
+      filtered = filtered.filter(s => String(s.ps) === psVal);
+    }
+
+    const dcVal = document.getElementById(`f-dc-${filterKey}`).value;
+    if (dcVal === 'online') filtered = filtered.filter(s => s.dcota_online);
+    if (dcVal === 'offline') filtered = filtered.filter(s => !s.dcota_online);
+
+    const tlVal = document.getElementById(`f-tl-${filterKey}`).value;
+    if (tlVal) filtered = filtered.filter(s => s.timeline === tlVal);
+
+    const q = (document.getElementById(`f-search-${filterKey}`).value || '').trim().toLowerCase();
+    if (q) {
+      filtered = filtered.filter(s =>
+        s.name.toLowerCase().includes(q) ||
+        s.id.toLowerCase().includes(q) ||
+        s.city.toLowerCase().includes(q) ||
+        s.regional.toLowerCase().includes(q)
+      );
+    }
+
+    document.getElementById(`kpis-${filterKey}`).innerHTML = renderKPIs(filtered, STORES.length);
+    document.getElementById(`table-wrap-${filterKey}`).innerHTML = renderStoresTable(filtered, 'tbl-' + filterKey);
+    document.getElementById(`f-count-${filterKey}`).innerHTML = `Filtradas <b>${filtered.length}</b> de ${initialStores.length} lojas`;
+  }
+
+  [`f-prog-${filterKey}`, `f-rm-${filterKey}`, `f-ps-${filterKey}`, `f-dc-${filterKey}`, `f-tl-${filterKey}`].forEach(id => {
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+  document.getElementById(`f-search-${filterKey}`).addEventListener('input', applyFilters);
+  document.getElementById(`f-clear-${filterKey}`).addEventListener('click', () => {
+    document.getElementById(`f-prog-${filterKey}`).value = '';
+    document.getElementById(`f-rm-${filterKey}`).value = '';
+    document.getElementById(`f-ps-${filterKey}`).value = '';
+    document.getElementById(`f-dc-${filterKey}`).value = '';
+    document.getElementById(`f-tl-${filterKey}`).value = '';
+    document.getElementById(`f-search-${filterKey}`).value = '';
+    applyFilters();
+  });
+
+  applyFilters();
+}
+
+// Mount panels
+mountPanel('panel-all', STORES, 'all');
+mountPanel('panel-apr', STORES.filter(s => s.prog === 'APR'), 'apr');
+mountPanel('panel-t2', STORES.filter(s => s.prog !== 'APR'), 't2');
+mountPanel('panel-dcota', STORES, 'dc');
+
+</script>
+</body>
+</html>
